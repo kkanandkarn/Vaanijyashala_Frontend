@@ -1,0 +1,23 @@
+/* Add this CSS to your stylesheet or component */
+.custom-scrollbar {
+    max-height: 450px; /* Adjust as needed */
+    overflow-y: auto;
+    scrollbar-width: initial; /* "auto" or "thin" */
+    scrollbar-color: rgba(155, 155, 155, 0.5) rgba(255, 255, 255, 0.1); /* Adjust colors */
+  }
+  
+  /* Optional: Customize scrollbar track and thumb */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */
+    background-color: rgba(255, 255, 255, 0.1); /* Color of the scrollbar track */
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(155, 155, 155, 0.5); /* Color of the scrollbar thumb */
+    border-radius: 14px; /* Rounded corners */
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(155, 155, 155, 0.8); /* Color of the scrollbar thumb on hover */
+  }
+  
