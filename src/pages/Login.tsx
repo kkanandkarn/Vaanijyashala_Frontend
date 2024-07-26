@@ -114,8 +114,6 @@ function Login() {
 
               navigate("/dashboard");
             }
-
-            toast.error("Internal server error");
           },
           onError: (error: any) => {
             handleClose();

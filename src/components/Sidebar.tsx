@@ -53,6 +53,7 @@ const menu: MenuItem[] = [
     id: 2,
     label: "Roles",
     icon: <FaUserCog />,
+    permission: "VIEW-ROLE",
     submenu: [
       {
         id: 6,
@@ -81,6 +82,7 @@ const menu: MenuItem[] = [
     id: 4,
     label: "State",
     icon: <RiGovernmentLine />,
+    permission: "VIEW-STATE",
     submenu: [
       {
         id: 6,

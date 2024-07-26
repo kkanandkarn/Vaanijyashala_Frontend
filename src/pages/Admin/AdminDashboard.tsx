@@ -7,10 +7,7 @@ const AdminDashboard = () => {
   const authData = useSelector((state: RootState) => state.auth);
 
   return (
-    <div className="h-screen flex">
-      <div className="w-2/12">
-        <Sidebar />
-      </div>
+    <div className="flex">
       <div className="">
         <h1>Admin Dashboard</h1>
         <div>
