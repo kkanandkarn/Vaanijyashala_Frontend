@@ -43,6 +43,13 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  React.useEffect(() => {
+    const token = localStorage.getItem("vs-token");
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, []);
+
   const { mutate: login } = useApi("/auth/login", "POST");
   const [formData, setFormData] = React.useState({
     email: "",
@@ -98,13 +105,14 @@ function Login() {
                 email: response.data.data.user.userEmail,
                 role: response.data.data.user.role,
                 token: response.data.data.token,
+                permissions: response.data.data.user.permissions,
               };
-              localStorage.setItem("token", response.data.data.token);
+
+              localStorage.setItem("vs-token", response.data.data.token);
 
               dispatch(loginAction(userData));
-              if (response.data.data.user.role === "Super Admin") {
-                navigate("admin-dashboard");
-              }
+
+              navigate("/dashboard");
             }
 
             toast.error("Internal server error");
