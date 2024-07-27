@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
-import Sidebar from "../../components/Sidebar";
+
 import { fetchFromApi } from "../../store/apiSlice";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ConfirmationModal from "../../components/ConfirmationModal";
+
 import "./styles.css";
 import { hideLoader, showLoader } from "../../components/Loader";
 import { updatePermissions } from "../../store/authSlice";
-import { Confirm } from "notiflix/build/notiflix-confirm-aio";
+
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 
@@ -20,7 +20,7 @@ import {
   VIEW_ROLE,
   VIEW_ROLE_METHOD,
 } from "../../ApiEndpoints";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import Modal from "../../components/Modal";
 import { useNavigate } from "react-router-dom";
@@ -45,13 +45,13 @@ interface Permission {
 const Roles: React.FC = () => {
   // const [isLoading, setIsLoading] = useState(true);
   const [roles, setRoles] = useState<Role[]>([]);
-  const [error, setError] = useState<string | null>(null);
+
   const [activeRoleId, setActiveRoleId] = useState<string | null>(null);
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [permissionId, setPermissionId] = useState<string | null>(null);
   const [permissionName, setPermissionName] = useState<string | null>(null);
   const [globalPermissions, setGlobalPermissions] = useState<Permission[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [method, setMethod] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [roleSearchTerm, setRoleSearchTerm] = useState<string>("");
@@ -78,7 +78,7 @@ const Roles: React.FC = () => {
       }
     } catch (error) {
       console.error("Error fetching roles:", error);
-      setError("Error fetching roles.");
+
       // setIsLoading(false);
       hideLoader();
     }
@@ -100,7 +100,7 @@ const Roles: React.FC = () => {
       }
     } catch (error) {
       console.error("Error fetching permissions:", error);
-      setError("Error fetching permissions.");
+
       // setIsLoading(false);
       hideLoader();
     }
@@ -139,7 +139,7 @@ const Roles: React.FC = () => {
   const handleDeleteIconClick = (permissionId: string) => {
     setMethod("remove");
     setPermissionId(permissionId);
-    // setIsModalOpen(true);
+
     setModal(true);
   };
 
@@ -147,12 +147,8 @@ const Roles: React.FC = () => {
     setMethod("add");
     setPermissionId(permissionId);
     setPermissionName(permissionName);
-    // setIsModalOpen(true);
-    setModal(true);
-  };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+    setModal(true);
   };
 
   const handleConfirmation = async () => {

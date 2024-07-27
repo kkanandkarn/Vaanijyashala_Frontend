@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import Sidebar from "../../components/Sidebar";
+import { useEffect, useState } from "react";
 
 import { hideLoader, showLoader } from "../../components/Loader";
 import {
@@ -7,8 +6,6 @@ import {
   VIEW_USERS_METHOD,
   VIEW_ROLE,
   VIEW_ROLE_METHOD,
-  CREATE_USER,
-  CREATE_USER_METHOD,
   EDIT_USER,
   EDIT_USER_METHOD,
   DELETE_USER,
@@ -25,7 +22,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import Modal from "../../components/Modal";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import {
   Button,
   CircularProgress,
@@ -40,7 +37,7 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { FaSave } from "react-icons/fa";
 import Layout from "../../Layout";
-import { Loading } from "notiflix/build/notiflix-loading-aio";
+
 import useReload from "../../hooks/useReload";
 interface Users {
   id: string;
@@ -102,8 +99,30 @@ const Users = () => {
         setUsers(response.data.users);
       }
     } catch (error) {
-      console.error("Error fetching roles:", error);
     } finally {
+      hideLoader();
+    }
+  };
+
+  const fetchRoles = async () => {
+    showLoader();
+    try {
+      const response = await fetchFromApi<{
+        status: string;
+
+        data: { roles: Role[] };
+      }>(VIEW_ROLE, VIEW_ROLE_METHOD);
+      if (response.status === "success") {
+        setRoles(response.data.roles);
+        hideLoader();
+        // setIsLoading(false);
+      } else {
+        throw new Error("Failed to fetch roles");
+      }
+    } catch (error) {
+      console.error("Error fetching roles:", error);
+
+      // setIsLoading(false);
       hideLoader();
     }
   };
@@ -123,6 +142,7 @@ const Users = () => {
       return;
     } else {
       fetchUsers();
+      fetchRoles();
       hideLoader();
     }
     const editPermName = "EDIT-USER";

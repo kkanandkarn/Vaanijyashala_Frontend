@@ -13,8 +13,8 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import toast, { Toaster } from "react-hot-toast";
-import Sidebar from "../../components/Sidebar";
+import toast from "react-hot-toast";
+
 import { showLoader, hideLoader } from "../../components/Loader";
 import { fetchFromApi } from "../../store/apiSlice";
 import {

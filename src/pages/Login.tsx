@@ -18,9 +18,8 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import { AuthData, login as loginAction } from "../store/authSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { AxiosResponse } from "axios";
-import { RootState } from "../store";
 
 interface User {
   userId: string;
@@ -43,7 +42,6 @@ interface ApiResponse {
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const authData = useSelector((state: RootState) => state.auth);
 
   React.useEffect(() => {
     const token = localStorage.getItem("vs-token");

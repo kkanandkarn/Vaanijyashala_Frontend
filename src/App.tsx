@@ -7,10 +7,8 @@ import AddRole from "./pages/Admin/AddRole";
 import Users from "./pages/Admin/Users";
 import AddUser from "./pages/Admin/AddUser";
 
-import useReload from "./hooks/useReload";
 import Dashboard from "./pages/Dashboard";
-import { useEffect, useState } from "react";
-import { showLoader, hideLoader } from "./components/Loader";
+
 import Permissions from "./pages/Admin/Permissions";
 import State from "./pages/State/State";
 import AddState from "./pages/State/AddState";
@@ -18,22 +16,6 @@ import NotFound from "./pages/NotFound";
 import AddDistrict from "./pages/State/AddDistrict";
 
 function App() {
-  const [loading, setLoading] = useState(false);
-
-  const { isDataFetched } = useReload();
-
-  useEffect(() => {
-    console.log("isDataFetched: ", isDataFetched);
-    if (!loading && isDataFetched) {
-      // hideLoader();
-      return;
-    }
-    if (loading || !isDataFetched) {
-      // showLoader();
-      return;
-    }
-  }, [loading, isDataFetched]);
-
   return (
     <>
       <Routes>

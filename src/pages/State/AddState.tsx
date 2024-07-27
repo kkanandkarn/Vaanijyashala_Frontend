@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import Sidebar from "../../components/Sidebar";
+import { useEffect, useState } from "react";
+
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { useNavigate } from "react-router-dom";
