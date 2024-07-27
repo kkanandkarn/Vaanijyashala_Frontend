@@ -26,6 +26,7 @@ import { FaSave } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import Layout from "../../Layout";
+import useReload from "../../hooks/useReload";
 
 interface Role {
   id: string;
@@ -59,8 +60,31 @@ const AddRole = () => {
 
   const navigate = useNavigate();
   const authData = useSelector((state: RootState) => state.auth);
+  const { isDataFetched } = useReload();
+  const fetchRoles = async () => {
+    showLoader();
+    try {
+      const response = await fetchFromApi<{
+        status: string;
+        data: { roles: Role[] };
+      }>(VIEW_ROLE, VIEW_ROLE_METHOD);
+      if (response.status === "success") {
+        setRoles(response.data.roles);
+        hideLoader();
+      } else {
+        throw new Error("Failed to fetch roles");
+      }
+    } catch (error) {
+      console.error("Error fetching roles:", error);
+      setError("Error fetching roles.");
+      hideLoader();
+    }
+  };
 
   useEffect(() => {
+    if (!isDataFetched) {
+      return;
+    }
     const requiredPermission = "ADD-ROLE";
     const hasPermission = authData.permissions.some(
       (perm) => perm.permissionName === requiredPermission
@@ -68,9 +92,16 @@ const AddRole = () => {
 
     if (!hasPermission) {
       navigate("/dashboard");
+      hideLoader();
       return;
+    } else {
+      fetchRoles();
+      hideLoader();
     }
-  }, []);
+  }, [isDataFetched]);
+  if (!isDataFetched) {
+    showLoader();
+  }
 
   const roleExists = (roleTitle: string) => {
     return roles.some(
@@ -93,30 +124,6 @@ const AddRole = () => {
     setDeleteModal(true);
     setDeleteRoleId(id);
   };
-
-  const fetchRoles = async () => {
-    showLoader();
-    try {
-      const response = await fetchFromApi<{
-        status: string;
-        data: { roles: Role[] };
-      }>(VIEW_ROLE, VIEW_ROLE_METHOD);
-      if (response.status === "success") {
-        setRoles(response.data.roles);
-        hideLoader();
-      } else {
-        throw new Error("Failed to fetch roles");
-      }
-    } catch (error) {
-      console.error("Error fetching roles:", error);
-      setError("Error fetching roles.");
-      hideLoader();
-    }
-  };
-
-  useEffect(() => {
-    fetchRoles();
-  }, []);
 
   const addRole = async () => {
     if (inputRole.trim() == "") {

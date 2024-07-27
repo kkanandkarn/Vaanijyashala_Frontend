@@ -41,6 +41,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { FaSave } from "react-icons/fa";
 import Layout from "../../Layout";
 import { Loading } from "notiflix/build/notiflix-loading-aio";
+import useReload from "../../hooks/useReload";
 interface Users {
   id: string;
   uniqueId: string;
@@ -84,6 +85,7 @@ const Users = () => {
 
   const authData = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
+  const { isDataFetched } = useReload();
 
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -107,6 +109,9 @@ const Users = () => {
   };
 
   useEffect(() => {
+    if (!isDataFetched) {
+      return;
+    }
     const requiredPermission = "VIEW-USER";
     const hasPermission = authData.permissions.some(
       (perm) => perm.permissionName === requiredPermission
@@ -114,7 +119,11 @@ const Users = () => {
 
     if (!hasPermission) {
       navigate("/dashboard");
+      hideLoader();
       return;
+    } else {
+      fetchUsers();
+      hideLoader();
     }
     const editPermName = "EDIT-USER";
     const deletePermName = "DELETE-USER";
@@ -127,11 +136,10 @@ const Users = () => {
     setEditPerm(hasEditPerm);
     setDeletePerm(hasDeletePerm);
     fetchUsers();
-  }, []);
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  }, [isDataFetched]);
+  if (!isDataFetched) {
+    showLoader();
+  }
 
   const handleEditValue = (
     id: string,

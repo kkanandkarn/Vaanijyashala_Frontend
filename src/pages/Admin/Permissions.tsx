@@ -6,6 +6,7 @@ import { RootState } from "../../store";
 import { hideLoader, showLoader } from "../../components/Loader";
 import { fetchFromApi } from "../../store/apiSlice";
 import { VIEW_PERMISSIONS, VIEW_PERMISSIONS_METHOD } from "../../ApiEndpoints";
+import useReload from "../../hooks/useReload";
 
 interface Permissions {
   id: string;
@@ -20,6 +21,7 @@ const Permissions = () => {
   const [error, setError] = useState<string | null>(null);
   const [permissionList, setPermissionList] = useState<Permissions[]>([]);
   const authData = useSelector((state: RootState) => state.auth);
+  const { isDataFetched } = useReload();
   const fetchPermissions = async () => {
     showLoader();
     try {
@@ -40,7 +42,25 @@ const Permissions = () => {
     }
   };
 
+  // useEffect(() => {
+  //
+  //   const requiredPermission = "VIEW-PERMISSIONS";
+  //   const hasPermission = authData.permissions.some(
+  //     (perm) => perm.permissionName === requiredPermission
+  //   );
+
+  //   if (!hasPermission) {
+  //     navigate("/dashboard");
+  //     return;
+  //   } else {
+  //     fetchPermissions();
+  //   }
+  // }, []);
   useEffect(() => {
+    if (!isDataFetched) {
+      return; // wait until data is fetched
+    }
+
     const requiredPermission = "VIEW-PERMISSIONS";
     const hasPermission = authData.permissions.some(
       (perm) => perm.permissionName === requiredPermission
@@ -48,11 +68,17 @@ const Permissions = () => {
 
     if (!hasPermission) {
       navigate("/dashboard");
+      hideLoader();
       return;
     } else {
       fetchPermissions();
+      hideLoader();
     }
-  }, []);
+  }, [isDataFetched]); // dependency on isDataFetched
+
+  if (!isDataFetched) {
+    showLoader();
+  }
   return (
     <Layout title={"Permissions - VaanijyaShala"}>
       <div className="border-t-2 px-4 border-b-2 h-12 py-2 flex items-center justify-start mt-5">

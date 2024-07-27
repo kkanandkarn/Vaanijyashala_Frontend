@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import { ADD_STATE, ADD_STATE_METHOD } from "../../ApiEndpoints";
 import { fetchFromApi } from "../../store/apiSlice";
 import "./styles.css";
+import useReload from "../../hooks/useReload";
 
 const AddState = () => {
   const navigate = useNavigate();
@@ -22,8 +23,12 @@ const AddState = () => {
   const [stateError, setStateError] = useState<boolean>(false);
   const [addDistPerm, setAddDistPerm] = useState<boolean>(true);
   const authData = useSelector((state: RootState) => state.auth);
+  const { isDataFetched } = useReload();
 
   useEffect(() => {
+    if (!isDataFetched) {
+      return;
+    }
     const requiredPermission = "ADD-STATE";
     const hasPermission = authData.permissions.some(
       (perm) => perm.permissionName === requiredPermission
@@ -31,8 +36,12 @@ const AddState = () => {
 
     if (!hasPermission) {
       navigate("/dashboard");
+      hideLoader();
       return;
+    } else {
+      hideLoader();
     }
+
     const addDistPermName = "ADD-DISTRICT";
     const checkaddDistPermName = authData.permissions.some(
       (perm) => perm.permissionName === addDistPermName
@@ -40,7 +49,11 @@ const AddState = () => {
     if (!checkaddDistPermName) {
       setAddDistPerm(false);
     }
-  }, []);
+  }, [isDataFetched]);
+
+  if (!isDataFetched) {
+    showLoader();
+  }
 
   const handleAddDistrict = () => {
     setDistricts([...districts, ""]);

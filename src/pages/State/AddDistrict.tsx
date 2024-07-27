@@ -17,6 +17,7 @@ import { IoIosAddCircle, IoIosRemoveCircle } from "react-icons/io";
 import { Button, CircularProgress } from "@mui/material";
 import { FaSave } from "react-icons/fa";
 import toast from "react-hot-toast";
+import useReload from "../../hooks/useReload";
 interface State {
   id: string;
   title: string;
@@ -40,28 +41,7 @@ const AddDistrict = () => {
   const [state, setState] = useState<State | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sendStateId, setSendStateId] = useState<string>("");
-
-  useEffect(() => {
-    const requiredPermission = "ADD-DISTRICT";
-    const hasPermission = authData.permissions.some(
-      (perm) => perm.permissionName === requiredPermission
-    );
-
-    if (!hasPermission) {
-      navigate("/dashboard");
-      return;
-    }
-    if (stateId) {
-      setSendStateId(stateId);
-    }
-  }, []);
-
-  const filteredDistricts = state?.districts.filter((district) =>
-    district.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
+  const { isDataFetched } = useReload();
 
   const fetchDistricts = async () => {
     showLoader();
@@ -90,8 +70,36 @@ const AddDistrict = () => {
   };
 
   useEffect(() => {
-    fetchDistricts();
-  }, []);
+    if (!isDataFetched) {
+      return;
+    }
+    const requiredPermission = "ADD-DISTRICT";
+    const hasPermission = authData.permissions.some(
+      (perm) => perm.permissionName === requiredPermission
+    );
+
+    if (!hasPermission) {
+      navigate("/dashboard");
+      hideLoader();
+      return;
+    } else {
+      fetchDistricts();
+      hideLoader();
+    }
+    if (stateId) {
+      setSendStateId(stateId);
+    }
+  }, [isDataFetched]);
+  if (!isDataFetched) {
+    showLoader();
+  }
+
+  const filteredDistricts = state?.districts.filter((district) =>
+    district.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
 
   const handleAddDistrict = () => {
     setDistricts([...districts, ""]);

@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import Layout from "../Layout";
 import AdminDashboard from "./Admin/AdminDashboard";
 import DataOperatorDashboard from "./DataOperator/DataOperatorDashboard";
+import { useNavigate } from "react-router-dom";
 
 // Define the mapping object type
 type DashboardComponents = {
@@ -18,6 +19,13 @@ const dashboardComponents: DashboardComponents = {
 
 const Dashboard: React.FC = () => {
   const authData = useSelector((state: RootState) => state.auth);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("vs-token");
+    if (!token) {
+      navigate("/login");
+    }
+  }, []);
 
   // Get the component based on the role, or fall back to a default
   const RoleDashboardComponent =

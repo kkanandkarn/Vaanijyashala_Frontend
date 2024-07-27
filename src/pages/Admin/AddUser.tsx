@@ -29,6 +29,7 @@ import { RootState } from "../../store";
 import { FaSave } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../Layout";
+import useReload from "../../hooks/useReload";
 
 interface Role {
   id: string;
@@ -57,25 +58,10 @@ const AddUser: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [roles, setRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState(false);
+  const { isDataFetched } = useReload();
 
   const navigate = useNavigate();
   const authData = useSelector((state: RootState) => state.auth);
-
-  useEffect(() => {
-    const requiredPermission = "ADD-USER";
-    const hasPermission = authData.permissions.some(
-      (perm) => perm.permissionName === requiredPermission
-    );
-
-    if (!hasPermission) {
-      navigate("/dashboard");
-      return;
-    }
-  }, []);
-
-  const handlePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
 
   const fetchRoles = async () => {
     showLoader();
@@ -97,8 +83,30 @@ const AddUser: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchRoles();
-  }, []);
+    if (!isDataFetched) {
+      return;
+    }
+    const requiredPermission = "ADD-USER";
+    const hasPermission = authData.permissions.some(
+      (perm) => perm.permissionName === requiredPermission
+    );
+
+    if (!hasPermission) {
+      navigate("/dashboard");
+      hideLoader();
+      return;
+    } else {
+      fetchRoles();
+      hideLoader();
+    }
+  }, [isDataFetched]);
+  if (!isDataFetched) {
+    showLoader();
+  }
+
+  const handlePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const formik = useFormik({
     initialValues: {

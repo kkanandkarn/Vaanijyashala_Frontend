@@ -25,6 +25,7 @@ import { useDispatch } from "react-redux";
 import Modal from "../../components/Modal";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../Layout";
+import useReload from "../../hooks/useReload";
 
 interface Role {
   id: string;
@@ -58,8 +59,57 @@ const Roles: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const authData = useSelector((state: RootState) => state.auth);
+  const { isDataFetched } = useReload();
+
+  const fetchRoles = async () => {
+    showLoader();
+    try {
+      const response = await fetchFromApi<{
+        status: string;
+
+        data: { roles: Role[] };
+      }>(VIEW_ROLE, VIEW_ROLE_METHOD);
+      if (response.status === "success") {
+        setRoles(response.data.roles);
+        hideLoader();
+        // setIsLoading(false);
+      } else {
+        throw new Error("Failed to fetch roles");
+      }
+    } catch (error) {
+      console.error("Error fetching roles:", error);
+      setError("Error fetching roles.");
+      // setIsLoading(false);
+      hideLoader();
+    }
+  };
+
+  const fetchPermissions = async () => {
+    showLoader();
+    try {
+      const response = await fetchFromApi<{
+        status: string;
+        data: { permissions: Permission[] };
+      }>(VIEW_PERMISSIONS, VIEW_PERMISSIONS_METHOD);
+      if (response.status === "success") {
+        setGlobalPermissions(response.data.permissions);
+        // setIsLoading(false);
+        hideLoader();
+      } else {
+        throw new Error("Failed to fetch permissions");
+      }
+    } catch (error) {
+      console.error("Error fetching permissions:", error);
+      setError("Error fetching permissions.");
+      // setIsLoading(false);
+      hideLoader();
+    }
+  };
 
   useEffect(() => {
+    if (!isDataFetched) {
+      return;
+    }
     const requiredPermission = "VIEW-ROLE";
     const hasPermission = authData.permissions.some(
       (perm) => perm.permissionName === requiredPermission
@@ -67,9 +117,17 @@ const Roles: React.FC = () => {
 
     if (!hasPermission) {
       navigate("/dashboard");
+      hideLoader();
       return;
+    } else {
+      fetchRoles();
+      fetchPermissions();
+      hideLoader();
     }
-  }, []);
+  }, [isDataFetched]);
+  if (!isDataFetched) {
+    showLoader();
+  }
 
   const filteredPermissions = globalPermissions.filter((permission) =>
     permission.permissionName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -77,56 +135,6 @@ const Roles: React.FC = () => {
   const filteredRoles = roles.filter((role) =>
     role.title.toLowerCase().includes(roleSearchTerm.toLowerCase())
   );
-
-  useEffect(() => {
-    const fetchRoles = async () => {
-      showLoader();
-      try {
-        const response = await fetchFromApi<{
-          status: string;
-
-          data: { roles: Role[] };
-        }>(VIEW_ROLE, VIEW_ROLE_METHOD);
-        if (response.status === "success") {
-          setRoles(response.data.roles);
-          hideLoader();
-          // setIsLoading(false);
-        } else {
-          throw new Error("Failed to fetch roles");
-        }
-      } catch (error) {
-        console.error("Error fetching roles:", error);
-        setError("Error fetching roles.");
-        // setIsLoading(false);
-        hideLoader();
-      }
-    };
-
-    const fetchPermissions = async () => {
-      showLoader();
-      try {
-        const response = await fetchFromApi<{
-          status: string;
-          data: { permissions: Permission[] };
-        }>(VIEW_PERMISSIONS, VIEW_PERMISSIONS_METHOD);
-        if (response.status === "success") {
-          setGlobalPermissions(response.data.permissions);
-          // setIsLoading(false);
-          hideLoader();
-        } else {
-          throw new Error("Failed to fetch permissions");
-        }
-      } catch (error) {
-        console.error("Error fetching permissions:", error);
-        setError("Error fetching permissions.");
-        // setIsLoading(false);
-        hideLoader();
-      }
-    };
-
-    fetchRoles();
-    fetchPermissions();
-  }, []);
 
   const handleDeleteIconClick = (permissionId: string) => {
     setMethod("remove");

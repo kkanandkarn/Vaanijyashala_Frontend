@@ -23,14 +23,16 @@ function App() {
   const { isDataFetched } = useReload();
 
   useEffect(() => {
+    console.log("isDataFetched: ", isDataFetched);
     if (!loading && isDataFetched) {
+      // hideLoader();
+      return;
+    }
+    if (loading || !isDataFetched) {
+      // showLoader();
       return;
     }
   }, [loading, isDataFetched]);
-
-  if (loading || !isDataFetched) {
-    return null;
-  }
 
   return (
     <>

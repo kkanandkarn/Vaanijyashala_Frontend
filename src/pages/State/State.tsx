@@ -33,6 +33,7 @@ import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
 
 import Modal from "../../components/Modal";
+import useReload from "../../hooks/useReload";
 
 interface State {
   id: string;
@@ -73,8 +74,35 @@ const State = () => {
   const [editDistId, setEditDistId] = useState<string>("");
   const [editDistName, setEditDistName] = useState<string>("");
   const [deleteDistId, setDeleteDistId] = useState<string>("");
+  const { isDataFetched } = useReload();
+
+  const fetchStates = async () => {
+    showLoader();
+    try {
+      const response = await fetchFromApi<{
+        status: string;
+        data: { states: State[] };
+      }>(GET_STATES, GET_STATES_METHOD);
+      if (response.status === "success") {
+        setStates(response.data.states);
+        hideLoader();
+
+        // setIsLoading(false);
+      } else {
+        throw new Error("Failed to fetch roles");
+      }
+    } catch (error) {
+      console.error("Error fetching roles:", error);
+
+      // setIsLoading(false);
+      hideLoader();
+    }
+  };
 
   useEffect(() => {
+    if (!isDataFetched) {
+      return;
+    }
     const requiredPermission = "VIEW-STATE";
     const hasPermission = authData.permissions.some(
       (perm) => perm.permissionName === requiredPermission
@@ -82,7 +110,11 @@ const State = () => {
 
     if (!hasPermission) {
       navigate("/dashboard");
+      hideLoader();
       return;
+    } else {
+      fetchStates();
+      hideLoader();
     }
     const editStatePermName = "EDIT-STATE";
     const checkEditStatePerm = authData.permissions.some(
@@ -119,7 +151,10 @@ const State = () => {
     if (!checkDeleteDistPermName) {
       setDeleteDistPerm(false);
     }
-  }, []);
+  }, [isDataFetched]);
+  if (!isDataFetched) {
+    showLoader();
+  }
 
   const filteredDistricts = districts.filter((district) =>
     district.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -127,32 +162,6 @@ const State = () => {
   const filteredStates = states.filter((state) =>
     state.title.toLowerCase().includes(stateSearchTerm.toLowerCase())
   );
-  const fetchStates = async () => {
-    showLoader();
-    try {
-      const response = await fetchFromApi<{
-        status: string;
-        data: { states: State[] };
-      }>(GET_STATES, GET_STATES_METHOD);
-      if (response.status === "success") {
-        setStates(response.data.states);
-        hideLoader();
-
-        // setIsLoading(false);
-      } else {
-        throw new Error("Failed to fetch roles");
-      }
-    } catch (error) {
-      console.error("Error fetching roles:", error);
-
-      // setIsLoading(false);
-      hideLoader();
-    }
-  };
-
-  useEffect(() => {
-    fetchStates();
-  }, []);
 
   const handleStateEdit = (e: any, stateId: string, stateName: string) => {
     e.stopPropagation();
