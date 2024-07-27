@@ -1,0 +1,105 @@
+.custom-scrollbar {
+     /* Adjust as needed */
+    overflow-y: auto;
+  
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */
+    background-color: rgba(255, 255, 255, 0.1); /* Color of the scrollbar track */
+   
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(155, 155, 155, 0.5); /* Color of the scrollbar thumb */
+    border-radius: 8px; /* Rounded corners */
+    padding-left: 10px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(155, 155, 155, 0.8); /* Color of the scrollbar thumb on hover */
+  }
+
+  /* -------------- */
+
+  /* Custom scrollbar styles for WebKit browsers */
+.page-scrollbar::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.page-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color of the scrollbar track */
+}
+
+.page-scrollbar::-webkit-scrollbar-thumb {
+  background: #888; /* Color of the scrollbar thumb */
+  border-radius: 4px; /* Round the corners of the scrollbar thumb */
+}
+
+.page-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color when hovering over the scrollbar thumb */
+}
+
+/* Custom scrollbar styles for Firefox */
+.page-scrollbar {
+  scrollbar-width: thin; /* Thin scrollbar */
+  scrollbar-color: #888 #f1f1f1; /* Thumb and track color */
+}
+
+/* styles.css */
+
+/* Accordion root - background color when collapsed */
+.accordion-root {
+  background-color: #1a202c !important;
+  border: 1px solid #4a5568 !important;
+}
+
+/* Accordion summary - background color */
+.accordion-summary {
+  background-color: #4a5568 !important;
+}
+
+/* Text color in accordion summary */
+.accordion-summary-text {
+  color: #edf2f7 !important;
+}
+
+/* Accordion details - background color */
+.accordion-details {
+  background-color: #1a202c !important;
+}
+
+/* Text color in accordion details */
+.accordion-details-text {
+  color: #edf2f7 !important;
+}
+
+/* Optional: hover effect for Accordion summary */
+.accordion-summary:hover {
+  background-color: #2d3748 !important; /* Darker shade for hover effect */
+}
+
+
+
+/* Example of hover and active state */
+.accordion-summary:hover {
+  background-color: #2d3748;
+}
+
+.accordion-summary-active {
+  background-color: #4a5568;
+}
+
+.accordion-details-active {
+  background-color: #1a202c;
+  
+}
+  
+.Mui-expanded {
+  background-color: #2d3748 !important; /* Darker shade when expanded */
+  color: #CCC !important
+}
+
+  
+  
+  
