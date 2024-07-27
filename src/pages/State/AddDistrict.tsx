@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import Layout from "../../Layout";
 import { useSelector } from "react-redux";

@@ -35,7 +35,6 @@ const renderCustomizedLabel = ({
   innerRadius,
   outerRadius,
   percent,
-  index,
 }: CustomizedLabelProps) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -100,9 +99,8 @@ const calculateHourlyData = (states: StateData[]): ChartData[] => {
 const DataOperatorDashboard: React.FC = () => {
   const [data, setData] = useState<ChartData[]>([]);
   const [totalState, setTotalState] = useState(0);
-  const [remainingState, setRemainingState] = useState(0);
+
   const [totalDistrict, setTotalDistrict] = useState(0);
-  const [remainingDistrict, setRemainingDistrict] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -191,7 +189,7 @@ const DataOperatorDashboard: React.FC = () => {
                 fill="#8884d8"
                 dataKey="value"
               >
-                {stateData.map((entry, index) => (
+                {stateData.map((_, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={COLORS[index % COLORS.length]}

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import Sidebar from "../../components/Sidebar";
+import { useEffect, useState } from "react";
+
 import { fetchFromApi } from "../../store/apiSlice";
 import { hideLoader, showLoader } from "../../components/Loader";
 import {
@@ -14,13 +14,13 @@ import {
   VIEW_ROLE,
   VIEW_ROLE_METHOD,
 } from "../../ApiEndpoints";
-import toast, { Toaster } from "react-hot-toast";
-import { FaEdit } from "react-icons/fa";
+import toast from "react-hot-toast";
+
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../components/Modal";
-import { Confirm } from "notiflix/build/notiflix-confirm-aio";
+
 import { Button, CircularProgress, TextField } from "@mui/material";
 import { FaSave } from "react-icons/fa";
 import { useSelector } from "react-redux";
@@ -42,7 +42,6 @@ interface Permission {
 }
 
 const AddRole = () => {
-  const [error, setError] = useState<string | null>(null);
   const [roles, setRoles] = useState<Role[]>([]);
 
   const [inputRole, setInputRole] = useState<string>("");
@@ -76,7 +75,7 @@ const AddRole = () => {
       }
     } catch (error) {
       console.error("Error fetching roles:", error);
-      setError("Error fetching roles.");
+
       hideLoader();
     }
   };

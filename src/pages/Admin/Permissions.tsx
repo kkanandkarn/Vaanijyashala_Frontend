@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "../../Layout";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -18,7 +18,7 @@ interface Permissions {
 
 const Permissions = () => {
   const navigate = useNavigate();
-  const [error, setError] = useState<string | null>(null);
+
   const [permissionList, setPermissionList] = useState<Permissions[]>([]);
   const authData = useSelector((state: RootState) => state.auth);
   const { isDataFetched } = useReload();
@@ -37,25 +37,11 @@ const Permissions = () => {
       }
     } catch (error) {
       console.error("Error fetching roles:", error);
-      setError("Error fetching roles.");
+
       hideLoader();
     }
   };
 
-  // useEffect(() => {
-  //
-  //   const requiredPermission = "VIEW-PERMISSIONS";
-  //   const hasPermission = authData.permissions.some(
-  //     (perm) => perm.permissionName === requiredPermission
-  //   );
-
-  //   if (!hasPermission) {
-  //     navigate("/dashboard");
-  //     return;
-  //   } else {
-  //     fetchPermissions();
-  //   }
-  // }, []);
   useEffect(() => {
     if (!isDataFetched) {
       return; // wait until data is fetched

@@ -1,5 +1,3 @@
-import React from "react";
-import Sidebar from "../../components/Sidebar";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 

@@ -1,5 +1,4 @@
 import Grid from "@mui/material/Grid";
-import React from "react";
 
 function Hello() {
   return (

@@ -3,8 +3,7 @@ import logo from "../../public/images/logo.png";
 import { FaUsers, FaUserCog, FaHome, FaSignOutAlt } from "react-icons/fa";
 import { FaClipboardUser } from "react-icons/fa6";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { IoIosAddCircleOutline } from "react-icons/io";
-import { IoEyeOutline } from "react-icons/io5";
+
 import { RiGovernmentLine } from "react-icons/ri";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store";

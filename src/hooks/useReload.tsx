@@ -79,10 +79,8 @@ const useReload = () => {
       } else {
         navigate("/");
       }
-      // setLoading(false);
     };
 
-    // setLoading(true);
     onReload();
   }, [dispatch, navigate, location.pathname]);
   return { isDataFetched };
